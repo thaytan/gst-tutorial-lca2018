@@ -1,0 +1,22 @@
+gst-inspect-1.0
+gst-inspect-1.0 identity
+
+gst-launch-1.0 audiotestsrc ! audioconvert ! autoaudiosink
+gst-launch-1.0 videotestsrc ! videoconvert ! autovideosink
+
+gst-typefind-1.0 big-buck-bunny_trailer.webm
+gst-launch-1.0 -vm audiotestsrc num-buffers=2 ! fakesink silent=false
+
+gst-launch-1.0 \
+ filesrc location=cooldance.ogg ! oggdemux name=d \
+    d. ! queue ! vorbisdec ! audioconvert ! audioresample !  autoaudiosink \
+    d. ! queue ! theoradec ! videoconvert ! videoscale ! autovideosink
+
+gst-launch-1.0 playbin uri=https://gstreamer.freedesktop.org/media/incoming/Pixar%20-%20Geri\'s%20Game.avi
+gst-launch-1.0 playbin uri=file:///$PWD/big-buck-bunny_trailer.webm video-sink="glupload ! gleffects_sobel ! glimagesink"
+
+gst-launch-1.0 -e v4l2src ! videoconvert ! x264enc ! mp4mux ! filesink location=test.mp4
+
+gst-launch-1.0 videotestsrc ! avenc_mpeg2video ! mpegvideoparse ! rtpmpvpay ! udpsink
+gst-launch-1.0 udpsrc caps="application/x-rtp,clock-rate=90000,payload=32" ! rtpjitterbuffer ! rtpmpvdepay ! decodebin ! autovideosink
+
